@@ -1,0 +1,31 @@
+version: "3.9"
+   
+services:
+  vault:
+    image: hashicorp/vault
+    command:
+      [ vault, server,  -dev, -dev-root-token-id, root , -dev-listen-address=0.0.0.0:8200 ]
+  shell:
+    build:
+      context: ./shell
+    image: shell
+    environment:
+      - VAULT_ADDR=http://vault:8200  
+    links:
+      - vault
+  client:
+    build:
+      context: ./client
+    image: client
+    environment:
+      - VAULT_ADDR=http://vault:8200  
+    links:
+      - vault
+  server:
+    build:
+      context: ./server
+    image: server
+    environment:
+      - VAULT_ADDR=http://vault:8200  
+    links:
+      - vault
