@@ -44,3 +44,18 @@ While the connection is considered secured, any cllient with a certificate signe
 
 In this case we are maiking the link between Approle and PkiRole name. We can explore other links between applications.
 
+# Trouble shooting 
+
+Some usfull commands : 
+
+    openssl verify -CAfile chain.pem www.example.org.pem
+
+Another usefull link - common opensslo commands.
+
+    https://www.sslshopper.com/article-most-common-openssl-commands.html
+
+## TODO:
+
+- rotate certificates
+- initial creation of next int
+- rotate by update or rotate by new endpoint.
