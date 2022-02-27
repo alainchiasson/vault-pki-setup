@@ -15,6 +15,7 @@ Our docker composes uses Hashicorp's vault container. It is started up with the 
 The shell container has the initial provisioing script : 
 
     docker compose exec shell /bin/bash -c setup_pki.sh
+    docker compose exec shell /bin/bash -c add_new_issuing.sh
 
 This will create all required endpoints ( pki_root, pki_int, approle), it creates the policy to link approle name to pki_int/rolename, and then creates 2 Approles and PKI\role. 
 
