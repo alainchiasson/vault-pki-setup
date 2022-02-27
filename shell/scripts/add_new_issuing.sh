@@ -8,7 +8,7 @@ vault login root
 # generate intermediate certs for rotation
 #
 # For demos and testing - issuing certs expire real soon
-cert_end=$(date --date='+3 days' +%Y%m%d)
+cert_end=$(date --date='+3 days' +%Y%m%d%H%M)
 
 vault secrets enable -path=pki_int_$cert_end pki
 

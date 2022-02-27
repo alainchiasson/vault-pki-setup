@@ -60,3 +60,14 @@ Another usefull link - common opensslo commands.
 - rotate certificates
 - initial creation of next int
 - rotate by update or rotate by new endpoint.
+
+## Walking through it all 
+
+vault list auth/approle/role
+
+vault secrets list
+
+vault list pki_int_20220302/roles
+
+ vault read auth/approle/role/client
+token_policies             [pki_role_20220302 default read_current_cert]
