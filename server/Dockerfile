@@ -1,17 +1,13 @@
-FROM centos
+FROM python
 
 WORKDIR /workdir
 
-RUN yum install -y yum-utils 
-RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+RUN apt-get update && apt-get install -y lsb-release software-properties-common
+RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+RUN apt-get update && apt-get install -y vault jq
 
-RUN yum -y install vault
-
-RUN yum install -y libcap which unzip jq
 RUN setcap cap_ipc_lock= /usr/bin/vault
-
-RUN yum install -y python3 python3-pip
-RUN  pip3 install pip --upgrade
 
 COPY python/requirements.txt .
 
