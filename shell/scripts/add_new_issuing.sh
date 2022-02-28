@@ -31,7 +31,7 @@ vault write -format=json /pki_int_$cert_end/intermediate/set-signed certificate=
 # Establish new policy ( for approle accessor )
 APPROLE_ACCESSOR=$(vault auth list -format=json | jq -r '."approle/".accessor')
 
-vault policy write pki_role_$cert_end - <<EOF
+vault policy write pki_int_$cert_end - <<EOF
 
 path "pki_int_${cert_end}/issue/{{identity.entity.aliases.${APPROLE_ACCESSOR}.metadata.role_name}}" {
     capabilities = ["read","update"]
@@ -46,7 +46,7 @@ for APP_ROLE in ${APP_ROLE_LIST}
 do
     # Add Policy to AppRole.
     tmpfile=$(mktemp)
-    vault read -format=json auth/approle/role/${APP_ROLE} | jq " [ \"pki_role_${cert_end}\" ] + .data.token_policies | { \"token_policies\": . }" > ${tmpfile}
+    vault read -format=json auth/approle/role/${APP_ROLE} | jq " [ \"pki_int_${cert_end}\" ] + .data.token_policies | { \"token_policies\": . }" > ${tmpfile}
     vault write auth/approle/role/${APP_ROLE} @${tmpfile}
 
     # Add PKI Role to PKI
@@ -58,5 +58,3 @@ done
 echo "Set int_endpoint to pki_int_${cert_end}"
 
 vault kv put secret/current_cert cert_endpoint=pki_int_${cert_end}
-
-

@@ -9,7 +9,7 @@ tmpfile=$(mktemp)
 APP_ROLE=${tmpfile#/tmp/tmp.}
 
 # Get all PKI_Policy=pki_role_.* and append base policies. ( this would cause a security issue - pki_role_* )
-vault policy list -format=json | jq '.[] | select( test("pki_role_.*")) |  { "token_policies": [ . , "read_current_cert", "default"] }' > ${tmpfile}
+vault policy list -format=json | jq '.[] | select( test("pki_int_.*")) |  { "token_policies": [ . , "read_current_cert", "default"] }' > ${tmpfile}
 
 # Create an App_role with PKI Policies
 vault write auth/approle/role/${APP_ROLE} @${tmpfile}
