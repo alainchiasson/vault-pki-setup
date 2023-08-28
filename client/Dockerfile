@@ -1,17 +1,14 @@
-FROM centos
+FROM python
 
 WORKDIR /workdir
 
-RUN yum install -y yum-utils 
-RUN yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+RUN apt-get update && apt-get install -y lsb-release software-properties-common gpg jq
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+RUN gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" |  tee /etc/apt/sources.list.d/hashicorp.list
+RUN apt-get update && apt-get install -y vault
 
-RUN yum -y install vault
-
-RUN yum install -y libcap which unzip jq
 RUN setcap cap_ipc_lock= /usr/bin/vault
-
-RUN yum install -y python3 python3-pip
-RUN  pip3 install pip --upgrade
 
 COPY python/requirements.txt .
 

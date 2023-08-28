@@ -18,33 +18,25 @@ context.load_verify_locations(cafile=client_certs)
 
 bindsocket = socket.socket()
 bindsocket.bind((listen_addr, listen_port))
-bindsocket.listen(5)
+bindsocket.listen()
 
 while True:
     print("Waiting for client")
     newsocket, fromaddr = bindsocket.accept()
-    print("Client connected: {}:{}".format(fromaddr[0], fromaddr[1]))
-    conn = context.wrap_socket(newsocket, server_side=True)
-    
-    cert = conn.getpeercert()
-    
-    print("SSL established. Peer: {}".format(cert))
-    
-    print("SubjectName: {}".format(cert['subject'][0][0][1]))
-    
-    buf = b''  # Buffer to hold received client data
-    try:
+
+    with newsocket:
+        print("Client connected: {}:{}".format(fromaddr[0], fromaddr[1]))
+
+        conn = context.wrap_socket(newsocket, server_side=True)
+        cert = conn.getpeercert()
+        
+        print("SSL established. Peer: {}".format(cert))        
+        print("SubjectName: {}".format(cert['subject'][0][0][1]))
+        
         while True:
-            data = conn.recv(4096)
-            if data:
-                # Client sent us data. Append to buffer
-                buf += data
-            else:
-                # No more data from client. Show buffer and close connection.
-                print("Received:", buf)
+            data = conn.recv(1024)
+            if not data: 
                 break
-    finally:
-        print("Closing connection")
-        conn.shutdown(socket.SHUT_RDWR)
-        conn.close()
-        sys.exit()
+            conn.sendall(data)
+        
+
