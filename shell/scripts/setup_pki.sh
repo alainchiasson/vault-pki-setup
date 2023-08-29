@@ -8,7 +8,9 @@ vault login root
 vault secrets enable -path=pki_root pki
 
 # generate root certificates ( and export )
-vault write -format=json /pki_root/root/generate/exported common_name="Dev Root" > root.json
+vault write -format=json /pki_root/root/generate/exported \
+    common_name="Dev Root" \
+    issuer_name="root-2023"                         > root.json
 
 jq -r '.data.certificate'   root.json > root.cert.pem
 jq -r '.data.issuing_ca'    root.json > root.ca.pem

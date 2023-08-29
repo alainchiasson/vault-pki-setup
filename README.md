@@ -20,7 +20,7 @@ The shell container has the initial provisioning scripts. The setup PKI, establi
 
 Thw add_new_issuing, it creates a new Issuing certificate, signed by the root. It also setups a new policy, and adds the policy to the existing AppRoles.
 
-    docker compose exec shell /bin/bash -c add_new_issuing.sh
+    docker compose exec shell /bin/bash -c add_issuing.sh
 
 This script will also add a reference to the current active certificate.
 
